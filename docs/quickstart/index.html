@@ -602,11 +602,13 @@
   <p class="nav-section-label">Features</p>
   <ul class="nav-list">
     <li><a href="#files">           <span class="nav-icon">📁</span>File Management</a></li>
+    <li><a href="#quotas">          <span class="nav-icon">📦</span>Storage Quotas</a></li>
     <li><a href="#jobs">            <span class="nav-icon">⚙️</span>Job Submission</a></li>
     <li><a href="#monitoring">      <span class="nav-icon">📊</span>Job Monitoring</a></li>
     <li><a href="#interactive">     <span class="nav-icon">🖥️</span>Interactive Apps</a></li>
     <li><a href="#desktop">         <span class="nav-icon">🪟</span>Running a GUI App</a></li>
     <li><a href="#terminal">        <span class="nav-icon">💻</span>Terminal Access</a></li>
+    <li><a href="#modules">         <span class="nav-icon">🧩</span>Module Browser</a></li>
   </ul>
 
   <p class="nav-section-label">Troubleshooting</p>
@@ -774,6 +776,42 @@
           loading="lazy"
         />
         Clicking it opens Globus at the same path you were browsing in OOD — log in with your Alliance credentials.
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── STORAGE QUOTAS ── -->
+  <section class="section" id="quotas">
+    <div class="section-header">
+      <div class="section-icon">📦</div>
+      <h2>Storage Quotas</h2>
+    </div>
+
+    <p>Open OnDemand provides a built-in <strong>Storage Quotas</strong> view so you can monitor your disk usage across all Trillium filesystems without leaving the browser.</p>
+
+    <p>Access it from the top menu bar: <strong>Files → Storage Quotas</strong>.</p>
+
+    <div class="feature-list" style="margin-bottom:24px;">
+      <div class="feature-item"><span class="fi-icon">🏠</span><span class="fi-text">HOME filesystem usage</span></div>
+      <div class="feature-item"><span class="fi-icon">⚡</span><span class="fi-text">SCRATCH filesystem usage</span></div>
+      <div class="feature-item"><span class="fi-icon">📂</span><span class="fi-text">PROJECT filesystem usage</span></div>
+    </div>
+
+    <div class="alert info">
+      <span class="alert-icon">💡</span>
+      <div>
+        Navigate to the <strong>Storage Quotas</strong> menu item (shown below) to see a real-time
+        breakdown of your quota usage and remaining capacity on each filesystem.
+        <br/><br/>
+        <img
+          src="https://github.com/user-attachments/assets/f15599d4-8c0a-42e7-92cb-00049329aef9"
+          alt="Storage Quotas navigation menu item in the Open OnDemand Files menu"
+          class="inline-img"
+          style="display:block;margin-top:8px;max-width:200px;border-radius:4px;border:1px solid var(--border);"
+          loading="lazy"
+        />
       </div>
     </div>
   </section>
@@ -986,13 +1024,61 @@
       </div>
     </div>
 
+    <div class="screenshot-block">
+      <div class="screenshot-header">
+        <div class="screenshot-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        Interactive Apps — Resource Configuration Form
+      </div>
+      <img
+        src="https://docs.alliancecan.ca/mediawiki/images/thumb/f/f1/Ood-interactive-form.png/600px-Ood-interactive-form.png"
+        alt="Interactive application resource configuration form showing fields for cores, memory, job length, GPU, and email notification"
+        loading="lazy"
+      />
+      <div class="screenshot-caption">Fig. 7 — Resource configuration form for launching an interactive application</div>
+    </div>
+
+    <div class="screenshot-block">
+      <div class="screenshot-header">
+        <div class="screenshot-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        My Interactive Sessions — Overview
+      </div>
+      <img
+        src="https://docs.alliancecan.ca/mediawiki/images/thumb/b/b4/Ood-my-sessions.png/600px-Ood-my-sessions.png"
+        alt="My Interactive Sessions page showing a list of queued and running interactive application sessions"
+        loading="lazy"
+      />
+      <div class="screenshot-caption">Fig. 8 — My Interactive Sessions page with running and queued sessions</div>
+    </div>
+
     <h3>📌 Session Controls</h3>
     <p>From the <em>My Interactive Sessions</em> page you can:</p>
     <ul>
       <li>Click <strong>Connect to …</strong> — opens the app in a new browser tab</li>
       <li>Click <code>&gt;_</code> beside <strong>Host</strong> — opens a terminal on that compute node</li>
-      <li>Click the red <strong>Delete</strong> button — kills the session and frees resources</li>
+      <li>Click the red <strong>Cancel</strong> button — kills the session and frees resources</li>
+      <li>Click <strong>Submit support ticket</strong>
+        <img
+          src="https://github.com/user-attachments/assets/abdbec46-9cad-4442-8631-dd7ef9cf9e8b"
+          alt="Submit support ticket button"
+          class="inline-img"
+          style="margin-left:6px;vertical-align:middle;max-height:28px;border-radius:4px;"
+          loading="lazy"
+        /> — opens a pre-filled support request if you have problems with the session
+      </li>
     </ul>
+
+    <div class="screenshot-block">
+      <div class="screenshot-header">
+        <div class="screenshot-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        My Interactive Sessions — Running Session Card
+      </div>
+      <img
+        src="https://github.com/user-attachments/assets/3f3876ec-148b-4510-8bab-6561d9ceff7e"
+        alt="Jupyter Lab interactive session card showing connection details, time remaining, session ID, and controls including the output log link"
+        loading="lazy"
+      />
+      <div class="screenshot-caption">Fig. 9 — Jupyter Lab session card on the My Interactive Sessions page</div>
+    </div>
 
     <h3>🚀 Installed Applications</h3>
     <div class="app-grid">
@@ -1156,6 +1242,50 @@
 
   <hr class="divider" />
 
+  <!-- ── MODULE BROWSER ── -->
+  <section class="section" id="modules">
+    <div class="section-header">
+      <div class="section-icon">🧩</div>
+      <h2>Module Browser</h2>
+    </div>
+
+    <p>
+      The <strong>Module Browser</strong> lets you search for available software on Trillium directly in
+      your browser — no need to log in via SSH to run <code>module spider</code>.
+    </p>
+
+    <p>Access it via: <strong>Help → Module Browser</strong> (or via the top navigation bar).</p>
+
+    <div class="feature-list" style="margin-bottom:24px;">
+      <div class="feature-item"><span class="fi-icon">🔍</span><span class="fi-text">Search modules by name</span></div>
+      <div class="feature-item"><span class="fi-icon">🖥️</span><span class="fi-text">Filter by cluster (Trillium / Trillium-GPU)</span></div>
+      <div class="feature-item"><span class="fi-icon">📦</span><span class="fi-text">Browse available versions</span></div>
+      <div class="feature-item"><span class="fi-icon">🔗</span><span class="fi-text">Explore module dependencies</span></div>
+      <div class="feature-item"><span class="fi-icon">📋</span><span class="fi-text">Copy the exact <code>module load</code> command</span></div>
+    </div>
+
+    <p>
+      Click a version badge to select it, choose your dependency set, and the full
+      <code>module load</code> command is generated automatically — ready to copy into
+      your job script or terminal.
+    </p>
+
+    <div class="screenshot-block">
+      <div class="screenshot-header">
+        <div class="screenshot-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        Module Browser — Paraview Example
+      </div>
+      <img
+        src="https://github.com/user-attachments/assets/966f0c9a-ee69-4e30-be5d-5d5cec574233"
+        alt="The Module Browser showing search results for Paraview with version badges for Trillium and Trillium-GPU clusters, dependency options, and the generated module load command"
+        loading="lazy"
+      />
+      <div class="screenshot-caption">Fig. 12 — Module Browser showing Paraview versions, dependencies, and generated load command</div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
   <!-- ── DEBUGGING ── -->
   <section class="section" id="debugging">
     <div class="section-header">
@@ -1192,14 +1322,14 @@
     <div class="screenshot-block">
       <div class="screenshot-header">
         <div class="screenshot-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
-        Session Card — Error Log Link
+        Session Card — Output/Error Log Link
       </div>
       <img
-        src="https://docs.alliancecan.ca/mediawiki/images/thumb/e/e7/Ood-session-id.png/600px-Ood-session-id.png"
-        alt="Interactive session card showing the output.log link and Session ID for error reporting"
+        src="https://github.com/user-attachments/assets/3f3876ec-148b-4510-8bab-6561d9ceff7e"
+        alt="Jupyter Lab interactive session card with the Output/Error Log link highlighted, and Session ID visible for support requests"
         loading="lazy"
       />
-      <div class="screenshot-caption">Fig. 12 — Session card showing the output.log link and Session ID</div>
+      <div class="screenshot-caption">Fig. 13 — Session card: the Output/Error Log link (highlighted) and Session ID are key for debugging</div>
     </div>
 
     <div class="alert warn">
@@ -1211,7 +1341,16 @@
           <li>Your <strong>Session ID</strong></li>
           <li>Any other relevant context (modules loaded, job parameters, etc.)</li>
         </ul>
-        Contact: <a href="mailto:support@scinet.utoronto.ca">support@scinet.utoronto.ca</a>
+        You can also use the
+        <img
+          src="https://github.com/user-attachments/assets/abdbec46-9cad-4442-8631-dd7ef9cf9e8b"
+          alt="Submit support ticket button"
+          class="inline-img"
+          style="margin:0 4px;vertical-align:middle;max-height:28px;border-radius:4px;"
+          loading="lazy"
+        />
+        button directly on the session card to open a pre-filled ticket.
+        Or contact: <a href="mailto:support@scinet.utoronto.ca">support@scinet.utoronto.ca</a>
       </div>
     </div>
   </section>
