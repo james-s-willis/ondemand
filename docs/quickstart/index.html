@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trillium Open OnDemand — Quickstart Guide</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand:        #0057b8;
+      --brand-dark:   #003f8a;
+      --brand-light:  #e8f0fb;
+      --accent:       #00a8e8;
+      --success:      #1daa6b;
+      --warn:         #e07b00;
+      --danger:       #c0392b;
+      --text:         #1a1a2e;
+      --text-muted:   #5a607a;
+      --border:       #dde3f0;
+      --bg:           #f7f9fc;
+      --card:         #ffffff;
+      --code-bg:      #1e2235;
+      --code-text:    #e0e6f0;
+      --sidebar-w:    270px;
+      --topbar-h:     64px;
+      --radius:       10px;
+      --shadow:       0 2px 12px rgba(0,0,0,.08);
+      --shadow-hover: 0 6px 24px rgba(0,0,0,.14);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Top navigation bar ── */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--topbar-h);
+      background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand) 100%);
+      display: flex; align-items: center; gap: 16px;
+      padding: 0 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    }
+    .topbar-logo {
+      display: flex; align-items: center; gap: 10px; text-decoration: none;
+    }
+    .topbar-logo svg { width: 32px; height: 32px; flex-shrink: 0; }
+    .topbar-title {
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+      line-height: 1.2;
+    }
+    .topbar-title span {
+      display: block;
+      font-size: .75rem;
+      font-weight: 400;
+      opacity: .8;
+      letter-spacing: .04em;
+    }
+    .topbar-right {
+      margin-left: auto;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .topbar-badge {
+      background: rgba(255,255,255,.15);
+      color: #fff;
+      font-size: .72rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.25);
+      white-space: nowrap;
+    }
+    .menu-toggle {
+      display: none;
+      background: none; border: none;
+      cursor: pointer; padding: 6px;
+      color: #fff;
+    }
+    .menu-toggle svg { display: block; }
+
+    /* ── Layout ── */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+      padding-top: var(--topbar-h);
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: fixed;
+      top: var(--topbar-h);
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 24px 0 40px;
+      z-index: 90;
+      transition: transform .25s ease;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .nav-section-label {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-muted);
+      padding: 16px 20px 6px;
+    }
+    .nav-list { list-style: none; }
+    .nav-list a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 20px;
+      font-size: .87rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: all .15s;
+      line-height: 1.3;
+    }
+    .nav-list a .nav-icon { font-size: 1rem; flex-shrink: 0; opacity: .7; }
+    .nav-list a:hover { background: var(--brand-light); color: var(--brand); border-left-color: var(--brand-light); }
+    .nav-list a.active { background: var(--brand-light); color: var(--brand); border-left-color: var(--brand); font-weight: 600; }
+    .nav-list a.active .nav-icon { opacity: 1; }
+
+    .sidebar-footer {
+      margin-top: 24px;
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+      font-size: .75rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .sidebar-footer a { color: var(--brand); text-decoration: none; }
+    .sidebar-footer a:hover { text-decoration: underline; }
+
+    /* ── Main content ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      min-width: 0;
+      padding: 0 0 80px;
+    }
+
+    /* ── Hero section ── */
+    .hero {
+      background: linear-gradient(135deg, var(--brand-dark) 0%, #1565c0 60%, var(--accent) 100%);
+      color: #fff;
+      padding: 64px 48px 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      color: rgba(255,255,255,.9);
+      font-size: .75rem;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      letter-spacing: .05em;
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      letter-spacing: -.02em;
+    }
+    .hero h1 em { font-style: normal; color: #90caf9; }
+    .hero-sub {
+      font-size: 1.05rem;
+      opacity: .85;
+      max-width: 600px;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .hero-chips {
+      display: flex; flex-wrap: wrap; gap: 10px;
+    }
+    .hero-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      color: #fff;
+      font-size: .8rem;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+    .hero-url {
+      margin-top: 28px;
+      background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      display: inline-flex; align-items: center; gap: 12px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: .9rem;
+      color: #fff;
+      max-width: 100%;
+    }
+    .hero-url .label {
+      font-family: inherit;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      opacity: .7;
+      white-space: nowrap;
+    }
+    .hero-url a { color: #90caf9; text-decoration: none; word-break: break-all; }
+    .hero-url a:hover { text-decoration: underline; }
+
+    /* ── Alert box ── */
+    .alert {
+      display: flex; gap: 14px;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      margin: 0 48px 0;
+      font-size: .9rem;
+      line-height: 1.6;
+    }
+    .alert-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
+    .alert.warn  { background: #fff8e1; border-left: 4px solid var(--warn); color: #5a3e00; margin-top: 32px; }
+    .alert.info  { background: #e3f2fd; border-left: 4px solid var(--brand); color: #0d3b6e; margin-top: 32px; }
+    .alert.success { background: #e8f5e9; border-left: 4px solid var(--success); color: #1a3a25; margin-top: 32px; }
+    .alert strong { font-weight: 700; }
+    .alert code { background: rgba(0,0,0,.08); padding: 1px 5px; border-radius: 3px; font-size: .87em; font-family: 'SF Mono', 'Fira Code', monospace; }
+
+    /* ── Content sections ── */
+    .section {
+      padding: 52px 48px 8px;
+      scroll-margin-top: calc(var(--topbar-h) + 20px);
+    }
+    .section-header {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border);
+    }
+    .section-icon {
+      width: 44px; height: 44px;
+      background: var(--brand-light);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .section h2 {
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.02em;
+    }
+    .section h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 32px 0 12px;
+    }
+    .section p { margin-bottom: 14px; color: var(--text); }
+    .section p:last-child { margin-bottom: 0; }
+    .section ul, .section ol { padding-left: 22px; margin-bottom: 14px; }
+    .section li { margin-bottom: 6px; }
+    .section a { color: var(--brand); text-decoration: none; }
+    .section a:hover { text-decoration: underline; }
+
+    /* ── Cards grid ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+    .card-icon { font-size: 1.6rem; margin-bottom: 10px; }
+    .card h4 { font-size: .95rem; font-weight: 700; margin-bottom: 6px; }
+    .card p { font-size: .83rem; color: var(--text-muted); margin: 0; }
+
+    /* ── Feature list ── */
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .feature-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: .88rem;
+    }
+    .feature-item .fi-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .feature-item .fi-text { color: var(--text); font-weight: 500; }
+
+    /* ── Steps ── */
+    .steps { counter-reset: step; margin: 20px 0; }
+    .step {
+      display: flex; gap: 16px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+    .step-num {
+      counter-increment: step;
+      content: counter(step);
+      min-width: 32px; height: 32px;
+      background: var(--brand);
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: .85rem;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .step-body { flex: 1; }
+    .step-body strong { display: block; font-weight: 700; margin-bottom: 4px; }
+    .step-body p { font-size: .9rem; margin: 0; color: var(--text-muted); }
+
+    /* ── Code blocks ── */
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      overflow-x: auto;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: .83rem;
+      line-height: 1.6;
+      margin: 16px 0;
+      position: relative;
+    }
+    pre .prompt { color: #64b5f6; user-select: none; }
+    code:not(pre code) {
+      background: rgba(0,87,184,.08);
+      color: var(--brand-dark);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: .87em;
+    }
+
+    /* ── Screenshots ── */
+    .screenshot-block {
+      margin: 28px 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .screenshot-header {
+      background: #f0f4ff;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 18px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: .8rem; color: var(--text-muted); font-weight: 600;
+    }
+    .screenshot-dots { display: flex; gap: 5px; margin-right: 6px; }
+    .screenshot-dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .screenshot-dots .d1 { background: #ff5f57; }
+    .screenshot-dots .d2 { background: #ffbd2e; }
+    .screenshot-dots .d3 { background: #28c840; }
+    .screenshot-block img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .screenshot-caption {
+      padding: 10px 18px;
+      font-size: .78rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      font-style: italic;
+    }
+
+    /* ── Inline image (small) ── */
+    .inline-img {
+      display: inline-block;
+      vertical-align: middle;
+      max-height: 36px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    /* ── App table ── */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .app-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+      transition: box-shadow .2s;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .app-card:hover { box-shadow: var(--shadow-hover); border-color: var(--brand); }
+    .app-card .app-icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+    .app-card .app-name { font-weight: 700; font-size: .9rem; display: block; margin-bottom: 4px; }
+    .app-card .app-tag {
+      display: inline-block;
+      font-size: .7rem;
+      background: var(--brand-light);
+      color: var(--brand);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+    .app-card .app-tag.license { background: #fff3e0; color: #e07b00; }
+
+    /* ── Comparison table ── */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 20px 0;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .87rem;
+      background: var(--card);
+    }
+    thead tr { background: var(--brand); color: #fff; }
+    thead th { padding: 14px 18px; text-align: left; font-weight: 700; font-size: .82rem; white-space: nowrap; }
+    tbody tr:nth-child(even) { background: var(--bg); }
+    tbody tr:hover { background: var(--brand-light); }
+    tbody td { padding: 12px 18px; border-top: 1px solid var(--border); vertical-align: top; }
+    tbody td:first-child { font-weight: 600; color: var(--text); white-space: nowrap; }
+    .td-new { background: #e8f5e9 !important; }
+    .td-old { background: #fce4ec !important; }
+    .td-check::before { content: '✅ '; }
+    .td-cross::before { content: '❌ '; }
+    .table-legend {
+      display: flex; gap: 20px; flex-wrap: wrap;
+      margin-top: 10px; font-size: .78rem; color: var(--text-muted);
+    }
+    .table-legend span { display: flex; align-items: center; gap: 6px; }
+    .legend-box { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+    /* ── Info panels ── */
+    .info-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin: 20px 0;
+      box-shadow: var(--shadow);
+    }
+    .info-panel h4 { font-size: 1rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+    /* ── Two-column layout ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    @media (max-width: 840px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── Parameter table ── */
+    .param-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .88rem;
+      margin: 16px 0;
+    }
+    .param-table th { text-align: left; padding: 8px 12px; background: var(--bg); border: 1px solid var(--border); font-weight: 700; font-size: .8rem; }
+    .param-table td { padding: 8px 12px; border: 1px solid var(--border); vertical-align: top; }
+    .param-table tr:nth-child(even) td { background: #f9fafd; }
+    .param-name { font-family: 'SF Mono', 'Fira Code', monospace; font-size: .82em; background: rgba(0,87,184,.07); color: var(--brand-dark); padding: 2px 6px; border-radius: 3px; }
+
+    /* ── Divider ── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0 48px; }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--code-bg);
+      color: rgba(255,255,255,.7);
+      text-align: center;
+      padding: 36px 48px;
+      font-size: .82rem;
+      margin-left: var(--sidebar-w);
+    }
+    footer a { color: #90caf9; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    footer .footer-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 16px; }
+
+    /* ── Jump-to-top ── */
+    .jump-top {
+      position: fixed; bottom: 28px; right: 28px;
+      background: var(--brand); color: #fff;
+      border: none; border-radius: 50%;
+      width: 44px; height: 44px;
+      font-size: 1.2rem; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0,87,184,.4);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s;
+      z-index: 80;
+    }
+    .jump-top.visible { opacity: 1; pointer-events: auto; }
+
+    /* ── Responsive ── */
+    @media (max-width: 960px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { transform: translateX(-270px); width: 270px; }
+      .sidebar.open { transform: translateX(0); }
+      .main, footer { margin-left: 0; }
+      .menu-toggle { display: flex; }
+      .hero, .section, .alert { padding-left: 24px; padding-right: 24px; }
+      .divider { margin: 0 24px; }
+    }
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.6rem; }
+      .hero, .section { padding-left: 16px; padding-right: 16px; }
+      .alert { margin: 24px 16px 0; }
+      .divider { margin: 0 16px; }
+      .cards { grid-template-columns: 1fr; }
+      .feature-list { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════
+     TOP BAR
+═════════════════════════════════ -->
+<header class="topbar">
+  <a class="topbar-logo" href="#top">
+    <!-- Open OnDemand logo mark -->
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect width="64" height="64" rx="12" fill="rgba(255,255,255,.15)"/>
+      <path d="M12 32a20 20 0 1 0 40 0 20 20 0 0 0-40 0Z" stroke="#fff" stroke-width="3"/>
+      <path d="M32 20v12l8 6" stroke="#90caf9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="32" cy="32" r="3" fill="#fff"/>
+    </svg>
+    <div class="topbar-title">
+      Open OnDemand
+      <span>Trillium Quickstart Guide</span>
+    </div>
+  </a>
+  <div class="topbar-right">
+    <span class="topbar-badge">SciNet · Trillium</span>
+    <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <rect y="4" width="22" height="2.2" rx="1.1" fill="white"/>
+        <rect y="10" width="22" height="2.2" rx="1.1" fill="white"/>
+        <rect y="16" width="22" height="2.2" rx="1.1" fill="white"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<!-- ════════════════════════════
+     SIDEBAR
+═════════════════════════════════ -->
+<nav class="sidebar" id="sidebar" aria-label="Page navigation">
+  <p class="nav-section-label">Getting Started</p>
+  <ul class="nav-list">
+    <li><a href="#intro"    class="active"><span class="nav-icon">📖</span>Introduction</a></li>
+    <li><a href="#login">           <span class="nav-icon">🔑</span>Logging In</a></li>
+  </ul>
+
+  <p class="nav-section-label">Features</p>
+  <ul class="nav-list">
+    <li><a href="#files">           <span class="nav-icon">📁</span>File Management</a></li>
+    <li><a href="#jobs">            <span class="nav-icon">⚙️</span>Job Submission</a></li>
+    <li><a href="#monitoring">      <span class="nav-icon">📊</span>Job Monitoring</a></li>
+    <li><a href="#interactive">     <span class="nav-icon">🖥️</span>Interactive Apps</a></li>
+    <li><a href="#desktop">         <span class="nav-icon">🪟</span>Running a GUI App</a></li>
+    <li><a href="#terminal">        <span class="nav-icon">💻</span>Terminal Access</a></li>
+  </ul>
+
+  <p class="nav-section-label">Troubleshooting</p>
+  <ul class="nav-list">
+    <li><a href="#debugging">       <span class="nav-icon">🔍</span>Debugging Errors</a></li>
+    <li><a href="#venv">            <span class="nav-icon">🐍</span>Python Environments</a></li>
+  </ul>
+
+  <p class="nav-section-label">Reference</p>
+  <ul class="nav-list">
+    <li><a href="#comparison">      <span class="nav-icon">⚖️</span>vs JupyterHub</a></li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <strong>Quick links</strong><br/>
+    <a href="https://ondemand.scinet.utoronto.ca" target="_blank" rel="noopener">Open OnDemand Portal ↗</a><br/>
+    <a href="https://openondemand.org" target="_blank" rel="noopener">openondemand.org ↗</a><br/>
+    <a href="https://docs.alliancecan.ca/wiki/Open_OnDemand" target="_blank" rel="noopener">Alliance OOD Docs ↗</a>
+  </div>
+</nav>
+
+<!-- ════════════════════════════
+     MAIN CONTENT
+═════════════════════════════════ -->
+<main class="main" id="top">
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="intro">
+    <div class="hero-badge">✦ SciNet · Trillium HPC Cluster</div>
+    <h1>Open OnDemand<br/><em>Quickstart Guide</em></h1>
+    <p class="hero-sub">
+      A web-based portal that gives you browser access to Trillium's computing
+      resources — no software installation required. Run Jupyter, RStudio,
+      VSCode, manage files, submit jobs, and more.
+    </p>
+    <div class="hero-chips">
+      <span class="hero-chip">🖥️ Interactive Apps</span>
+      <span class="hero-chip">📁 File Management</span>
+      <span class="hero-chip">⚙️ Job Submission</span>
+      <span class="hero-chip">💻 Web Terminal</span>
+      <span class="hero-chip">📊 Job Monitoring</span>
+    </div>
+    <div class="hero-url">
+      <span class="label">Portal URL</span>
+      <a href="https://ondemand.scinet.utoronto.ca" target="_blank" rel="noopener">
+        https://ondemand.scinet.utoronto.ca
+      </a>
+    </div>
+  </section>
+
+  <!-- info callout -->
+  <div class="alert info" style="margin-top:32px;">
+    <span class="alert-icon">ℹ️</span>
+    <div>
+      This page covers the Open OnDemand service attached to <strong>Trillium</strong>.
+      For general information on Open OnDemand instances across all Alliance clusters,
+      see the <a href="https://docs.alliancecan.ca/wiki/Open_OnDemand">Open OnDemand</a> wiki page.
+    </div>
+  </div>
+
+  <!-- ── INTRO CARDS ── -->
+  <section class="section">
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <h4>Web-based Access</h4>
+        <p>Use any modern browser — no SSH client or VPN needed.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h4>Interactive Computing</h4>
+        <p>Run Jupyter, RStudio, VSCode and more with dedicated CPU/GPU resources.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📂</div>
+        <h4>File Browser</h4>
+        <p>Upload, download, create and edit files up to 10 GB directly in your browser.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h4>Job Scheduler</h4>
+        <p>Submit and monitor Slurm batch jobs with the Open Composer interface.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── LOGIN ── -->
+  <section class="section" id="login">
+    <div class="section-header">
+      <div class="section-icon">🔑</div>
+      <h2>Logging into the Portal</h2>
+    </div>
+
+    <p>Open a web browser and navigate to the portal URL below. You will be prompted for your <strong>Alliance username and password</strong>, followed by <strong>multi-factor authentication</strong> via Duo or Yubikey.</p>
+
+    <div class="hero-url" style="background:#f0f4ff; color:var(--text); border-color:var(--border); display:inline-flex;">
+      <span class="label" style="color:var(--text-muted);">Portal URL</span>
+      <a href="https://ondemand.scinet.utoronto.ca" target="_blank" rel="noopener" style="color:var(--brand);">
+        https://ondemand.scinet.utoronto.ca
+      </a>
+    </div>
+
+    <p style="margin-top:18px;">Once logged in, you will land on the <strong>Open OnDemand dashboard</strong> where all tools and applications are accessible from the top menu bar.</p>
+
+    <div class="screenshot-block">
+      <div class="screenshot-header">
+        <div class="screenshot-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        Open OnDemand Dashboard
+      </div>
+      <img
+        src="https://docs.alliancecan.ca/mediawiki/images/thumb/d/d4/Ood-dashboard.png/600px-Ood-dashboard.png"
+        alt="The Open OnDemand dashboard showing the main navigation menu and available tools"
+        loading="lazy"
+      />
+      <div class="screenshot-caption">Fig. 1 — Open OnDemand dashboard after login</div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── FILE MANAGEMENT ── -->
+  <section class="section" id="files">
+    <div class="section-header">
+      <div class="section-icon">📁</div>
+      <h2>File Management</h2>
+    </div>
+
+    <p>Click the <strong>Files</strong> tab in the top menu and select a directory from the dropdown: <code>HOME</code>, <code>SCRATCH</code>, or <code>PROJECT</code>.</p>
+
+    <div class="feature-list">
+      <div class="feature-item"><span class="fi-icon">📂</span><span class="fi-text">Navigate directories</span></div>
+      <div class="feature-item"><span class="fi-icon">⬆️</span><span class="fi-text">Upload files (up to 10 GB)</span></div>
+      <div class="feature-item"><span class="fi-icon">⬇️</span><span class="fi-text">Download files</span></div>
+      <div class="feature-item"><span class="fi-icon">✏️</span><span class="fi-text">Create &amp; edit files</span></div>
+      <div class="feature-item"><span class="fi-icon">📝</span><span class="fi-text">Create directories</span></div>
+      <div class="feature-item"><span class="fi-icon">🗑️</span><span class="fi-text">Delete files &amp; folders</span></div>
+    </div>
+
+    <div class="screenshot-block">
+      <div class="screenshot-header">
+        <div class="screenshot-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        File Browser
+      </div>
+      <img
+        src="https://docs.alliancecan.ca/mediawiki/images/thumb/9/98/Ood-file-browser.png/600px-Ood-file-browser.png"
+        alt="The Open OnDemand file browser showing directory listing and action buttons"
+        loading="lazy"
+      />
+      <div class="screenshot-caption">Fig. 2 — File browser with directory navigation and upload controls</div>
+    </div>
+
+    <h3>📦 Uploading Large Files — Use Globus</h3>
+    <p>The file upload limit in the browser is <strong>10 GB</strong>. For larger transfers or unreliable connections, use <a href="https://docs.scinet.utoronto.ca/index.php/Globus" target="_blank" rel="noopener">Globus</a>.</p>
+    <div class="alert info">
+      <span class="alert-icon">💡</span>
+      <div>
+        A <strong>Globus button</strong> is available in the top-right of the file browser.
+        <img
+          src="https://docs.alliancecan.ca/mediawiki/images/thumb/6/69/Globus_button.png/300px-Globus_button.png"
+          alt="Globus button"
+          class="inline-img"
+          style="margin-left:8px;"
+          loading="lazy"
+        />
+        Clicking it opens Globus at the same path you were browsing in OOD — log in with your Alliance credentials.
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── JOB SUBMISSION ── -->
+  <section class="section" id="jobs">
+    <div class="section-header">
+      <div class="section-icon">⚙️</div>
+      <h2>Job Submission</h2>
+    </div>
+
+    <p>
+      Open OnDemand uses <strong>Open Composer</strong> — a suite of pre-built Slurm job templates — to
+      submit batch jobs to Trillium. This is ideal when you need more resources than interactive sessions
+      offer (up to <strong>192 cores</strong> and <strong>755 GB RAM</strong> on a full compute node).
+    </p>
+
+    <div class="alert info">
+      <span class="alert-icon">📍</span>
+      <div>
+        Access Open Composer via the <strong>Jobs</strong> drop-down → <strong>Open Composer</strong>,
+        or click one of the quick-launch shortcuts: <em>MPI Slurm Job</em>, <em>OpenMP Slurm Job</em>,
+        or <em>Hybrid MPI/OpenMP Slurm Job</em>.
+      </div>
+    </div>
+
+    <div class="screenshot-block">
+      <div class="screenshot-header">
+        <div class="screenshot-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        Open Composer — Dashboard Shortcuts
+      </div>
+      <img
+        src="https://docs.alliancecan.ca/mediawiki/images/8/8c/Ood-oc-shortcuts.png"
+        alt="Open Composer shortcut icons on the Open OnDemand dashboard"
+        loading="lazy"
+      />
+      <div class="screenshot-caption">Fig. 3 — Open Composer shortcut buttons on the dashboard</div>
+    </div>
+
+    <h3>📝 Job Submission Form</h3>
+    <p>The submission page is split into <strong>job parameters</strong> (left panel) and the <strong>job script editor</strong> (right panel). Changes to parameters update the script automatically, but you can also edit the script directly.</p>
+
+    <div class="two-col">
+      <div class="info-panel">
+        <h4>⚙️ Job Parameters</h4>
+        <table class="param-table">
+          <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><span class="param-name">Nodes</span></td><td>Number of compute nodes</td></tr>
+            <tr><td><span class="param-name">Tasks per node</span></td><td>MPI tasks / OpenMP threads</td></tr>
+            <tr><td><span class="param-name">Wall clock time</span></td><td>Maximum job runtime</td></tr>
+            <tr><td><span class="param-name">Output file</span></td><td>Where stdout/stderr is written</td></tr>
+            <tr><td><span class="param-name">Cluster</span></td><td>Trillium (CPU) or Trillium-GPU</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="info-panel">
+        <h4>📋 Extra Fields</h4>
+        <table class="param-table">
+          <thead><tr><th>Field</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><span class="param-name">Script Location</span></td><td>Directory to save &amp; run the script from</td></tr>
+            <tr><td><span class="param-name">Script Name</span></td><td>Filename for the job script</td></tr>
+            <tr><td><span class="param-name">Job Name</span></td><td>Label shown in the job queue</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:.83rem;color:var(--text-muted);margin-top:10px;">
+          Selecting <em>Trillium-GPU</em> as cluster reveals an additional <strong>GPU resource</strong> field:
+          <img src="https://docs.alliancecan.ca/mediawiki/images/thumb/7/7c/Ood-oc-gpus.png/100px-Ood-oc-gpus.png" alt="GPU selector" class="inline-img" loading="lazy" />
+        </p>
+      </div>
+    </div>
+
+    <div class="screenshot-block">
+      <div class="screenshot-header">
+        <div class="screenshot-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        Open Composer — Job Script Editor
+      </div>
+      <img
+        src="https://docs.alliancecan.ca/mediawiki/images/thumb/5/50/Ood-oc-job.png/600px-Ood-oc-job.png"
+        alt="Open Composer job submission page showing the parameters panel and script editor side by side"
+        loading="lazy"
+      />
+      <div class="screenshot-caption">Fig. 4 — Job parameters (left) and script editor (right)</div>
+    </div>
+
+    <p>Click <strong>Submit</strong> to queue the job. A confirmation banner will display your <strong>job ID</strong>:</p>
+    <div style="text-align:center;margin:12px 0;">
+      <img
+        src="https://docs.alliancecan.ca/mediawiki/images/thumb/1/19/Ood-oc-job-submit.png/400px-Ood-oc-job-submit.png"
+        alt="Job submission confirmation showing the assigned job ID"
+        style="max-width:400px;width:100%;border-radius:8px;border:1px solid var(--border);"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="alert warn">
+      <span class="alert-icon">⚠️</span>
+      <div>
+        The provided scripts are <strong>basic templates</strong>. You will need to edit them to load the right modules, specify input/output paths, and adjust resource requests for your workload.
+      </div>
+    </div>
+
+    <h3>📋 Supported Job Templates</h3>
+    <div class="feature-list">
+      <div class="feature-item"><span class="fi-icon">🔗</span><span class="fi-text">MPI Slurm Job</span></div>
+      <div class="feature-item"><span class="fi-icon">🔀</span><span class="fi-text">OpenMP Slurm Job</span></div>
+      <div class="feature-item"><span class="fi-icon">⚡</span><span class="fi-text">Hybrid MPI/OpenMP Slurm Job</span></div>
+      <div class="feature-item"><span class="fi-icon">🐍</span><span class="fi-text">Python Slurm Job</span></div>
+      <div class="feature-item"><span class="fi-icon">📊</span><span class="fi-text">R Slurm Job</span></div>
+      <div class="feature-item"><span class="fi-icon">🔬</span><span class="fi-text">VASP Slurm Job</span></div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── JOB MONITORING ── -->
+  <section class="section" id="monitoring">
+    <div class="section-header">
+      <div class="section-icon">📊</div>
+      <h2>Job Monitoring</h2>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <h3>Active Jobs View</h3>
+        <p>Navigate to <strong>Jobs → Active Jobs</strong> for a live overview of your queue.</p>
+        <ul>
+          <li>Use the <strong>Filter</strong> box (top-right) to search jobs</li>
+          <li>Click column headers to <strong>sort</strong> (e.g. by status)</li>
+          <li>Click <code>&gt;</code> beside a job to see start/end time, node list, and charged account</li>
+          <li>Use the dropdown to switch between <strong>My Jobs</strong> and <strong>All Jobs</strong></li>
+        </ul>
+        <p>For detailed performance statistics, visit the <a href="https://my.scinet.utoronto.ca" target="_blank" rel="noopener">mySciNet portal</a>.</p>
+      </div>
+      <div>
+        <h3>Open Composer History Tab</h3>
+        <p>Navigate to <strong>Jobs → Open Composer → History</strong> to see all jobs submitted through Open Composer.</p>
+        <table class="param-table" style="margin-top:8px;">
+          <thead><tr><th>Column click</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>Job ID</td><td>Opens job in mySciNet (stats &amp; Slurm details)</td></tr>
+            <tr><td>Application</td><td>Opens the job script template editor</td></tr>
+            <tr><td>Script Location</td><td>Opens file browser at that directory</td></tr>
+            <tr><td>Script Name</td><td>Displays the submitted job script</td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:.85rem;color:var(--text-muted);margin-top:8px;">
+          To re-run or modify a previous job: click the script under <strong>Script Name</strong>, then click <strong>Load Parameters</strong>.
+        </p>
+      </div>
+    </div>
+
+    <div class="screenshot-block">
+      <div class="screenshot-header">
+        <div class="screenshot-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        Active Jobs
+      </div>
+      <img
+        src="https://docs.alliancecan.ca/mediawiki/images/thumb/0/02/Ood-active-jobs.png/600px-Ood-active-jobs.png"
+        alt="The Active Jobs page showing a table of running and queued jobs with status indicators"
+        loading="lazy"
+      />
+      <div class="screenshot-caption">Fig. 6 — Active Jobs queue with filter and sort controls</div>
+    </div>
+
+    <div class="screenshot-block">
+      <div class="screenshot-header">
+        <div class="screenshot-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        Open Composer — Job History
+      </div>
+      <img
+        src="https://docs.alliancecan.ca/mediawiki/images/thumb/c/c2/Ood-oc-history.png/600px-Ood-oc-history.png"
+        alt="Open Composer History tab showing submitted jobs, their status, and resubmit controls"
+        loading="lazy"
+      />
+      <div class="screenshot-caption">Fig. 5 — Open Composer History tab with job status and actions</div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── INTERACTIVE APPS ── -->
+  <section class="section" id="interactive">
+    <div class="section-header">
+      <div class="section-icon">🖥️</div>
+      <h2>Interactive Applications</h2>
+    </div>
+
+    <p>Navigate to the <strong>Interactive Apps</strong> tab and select an application. Configure your resources and click <strong>Launch</strong> — you'll be taken to <em>My Interactive Sessions</em> where you can connect once the job starts.</p>
+
+    <h3>🔧 Resource Parameters</h3>
+    <div class="feature-list" style="margin-bottom:24px;">
+      <div class="feature-item"><span class="fi-icon">⏱️</span><span class="fi-text">Job length (hours)</span></div>
+      <div class="feature-item"><span class="fi-icon">🧠</span><span class="fi-text">Number of CPU cores</span></div>
+      <div class="feature-item"><span class="fi-icon">💾</span><span class="fi-text">Memory allocation (GB)</span></div>
+      <div class="feature-item"><span class="fi-icon">🎮</span><span class="fi-text">GPU resources (H100 MIG)</span></div>
+      <div class="feature-item"><span class="fi-icon">📧</span><span class="fi-text">Email notification on start</span></div>
+    </div>
+
+    <div class="alert info">
+      <span class="alert-icon">🎮</span>
+      <div>
+        The only GPU profile currently available is <strong><code>h100_1.10</code></strong>
+        (<a href="https://docs.alliancecan.ca/wiki/Multi-Instance_GPU" target="_blank" rel="noopener">MIG</a>),
+        providing <strong>10 GB of memory</strong> and <strong>1/8 of the compute resources</strong>
+        of a full NVIDIA H100 GPU.
+      </div>
+    </div>
+
+    <h3>📌 Session Controls</h3>
+    <p>From the <em>My Interactive Sessions</em> page you can:</p>
+    <ul>
+      <li>Click <strong>Connect to …</strong> — opens the app in a new browser tab</li>
+      <li>Click <code>&gt;_</code> beside <strong>Host</strong> — opens a terminal on that compute node</li>
+      <li>Click the red <strong>Delete</strong> button — kills the session and frees resources</li>
+    </ul>
+
+    <h3>🚀 Installed Applications</h3>
+    <div class="app-grid">
+      <a class="app-card" href="https://jupyter.org" target="_blank" rel="noopener">
+        <span class="app-icon">📓</span>
+        <span class="app-name">Jupyter Lab / Notebook</span>
+        <span class="app-tag">Python · R · Julia</span>
+      </a>
+      <a class="app-card" href="https://posit.co/products/open-source/rstudio/" target="_blank" rel="noopener">
+        <span class="app-icon">📈</span>
+        <span class="app-name">RStudio</span>
+        <span class="app-tag">R · Statistics</span>
+      </a>
+      <a class="app-card" href="https://code.visualstudio.com" target="_blank" rel="noopener">
+        <span class="app-icon">🆚</span>
+        <span class="app-name">VS Code</span>
+        <span class="app-tag">Code Editor</span>
+      </a>
+      <a class="app-card" href="#desktop">
+        <span class="app-icon">🖥️</span>
+        <span class="app-name">Trillium Desktop</span>
+        <span class="app-tag">Remote Desktop</span>
+      </a>
+      <a class="app-card" href="https://www.paraview.org" target="_blank" rel="noopener">
+        <span class="app-icon">🌐</span>
+        <span class="app-name">ParaView</span>
+        <span class="app-tag">Visualization</span>
+      </a>
+      <a class="app-card" href="https://www.linaroforge.com" target="_blank" rel="noopener">
+        <span class="app-icon">🔧</span>
+        <span class="app-name">Forge DDT / MAP</span>
+        <span class="app-tag">Debugger · Profiler</span>
+      </a>
+      <a class="app-card" href="https://www.mathworks.com/products/matlab.html" target="_blank" rel="noopener">
+        <span class="app-icon">🔢</span>
+        <span class="app-name">MATLAB</span>
+        <span class="app-tag">Numerical Computing</span>
+      </a>
+      <a class="app-card" href="https://www.sas.com/en_ca/home.html" target="_blank" rel="noopener">
+        <span class="app-icon">📊</span>
+        <span class="app-name">SAS</span>
+        <span class="app-tag license">Requires License</span>
+      </a>
+      <a class="app-card" href="https://www.stata.com" target="_blank" rel="noopener">
+        <span class="app-icon">📉</span>
+        <span class="app-name">Stata</span>
+        <span class="app-tag license">Requires License</span>
+      </a>
+      <a class="app-card" href="https://github.com/RIKEN-RCCS/OpenComposer" target="_blank" rel="noopener">
+        <span class="app-icon">📝</span>
+        <span class="app-name">Open Composer</span>
+        <span class="app-tag">Job Submission</span>
+      </a>
+    </div>
+
+    <p style="font-size:.85rem;color:var(--text-muted);margin-top:8px;">
+      Need a new application? Email
+      <a href="mailto:support@scinet.utoronto.ca">support@scinet.utoronto.ca</a>.
+    </p>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── RUNNING A GUI APP ── -->
+  <section class="section" id="desktop">
+    <div class="section-header">
+      <div class="section-icon">🪟</div>
+      <h2>Running an Application GUI</h2>
+    </div>
+
+    <p>
+      For software with a graphical interface (e.g. Octave, Blender) that is not yet in the
+      Interactive Apps list, use <strong>Trillium Desktop</strong> — a full remote desktop
+      environment running in your browser.
+    </p>
+
+    <div class="alert success">
+      <span class="alert-icon">💡</span>
+      <div><strong>Example:</strong> Running Octave's graphical interface inside a Trillium Desktop session.</div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Launch Trillium Desktop</strong>
+          <p>Go to <em>Interactive Apps → Trillium Desktop</em>. Choose cores, memory, and job length, then click <strong>Launch</strong>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Connect to the Desktop</strong>
+          <p>On the <em>My Interactive Sessions</em> page, optionally adjust <em>Image Quality</em> and <em>Compression</em> for your connection speed, then click <strong>Connect to Trillium Desktop</strong>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>Open a terminal and load modules</strong>
+          <p>Once the desktop loads, open a terminal within it and load the required environment modules:</p>
+          <pre><span class="prompt">$ </span>module load StdEnv/2023 gcc/12.3 openmpi/4.1.5 octave/7.2.0</pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>Launch the GUI application</strong>
+          <pre><span class="prompt">$ </span>octave --gui</pre>
+          <p style="margin-top:6px;">You can also inspect available binaries for any module:</p>
+          <pre><span class="prompt">$ </span>ls $EBROOTOCTAVE/bin</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="screenshot-block">
+      <div class="screenshot-header">
+        <div class="screenshot-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        Trillium Desktop — Octave GUI
+      </div>
+      <img
+        src="https://docs.alliancecan.ca/mediawiki/images/thumb/a/ae/Ood-desktop-octave.png/600px-Ood-desktop-octave.png"
+        alt="Octave graphical interface running inside a Trillium Desktop browser session"
+        loading="lazy"
+      />
+      <div class="screenshot-caption">Fig. 10 — Octave GUI running inside a Trillium Desktop session</div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── TERMINAL ── -->
+  <section class="section" id="terminal">
+    <div class="section-header">
+      <div class="section-icon">💻</div>
+      <h2>Terminal Access</h2>
+    </div>
+
+    <p>
+      Open OnDemand provides a <strong>web-based terminal</strong> that works just like a regular SSH session —
+      no local client required.
+    </p>
+    <p>
+      Access it via: <strong>Clusters → Trillium Shell Access</strong>. A new browser tab opens with a
+      full terminal session on Trillium's login node.
+    </p>
+
+    <div class="screenshot-block">
+      <div class="screenshot-header">
+        <div class="screenshot-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        Web-based Terminal
+      </div>
+      <img
+        src="https://docs.alliancecan.ca/mediawiki/images/thumb/7/7b/Ood-terminal.png/600px-Ood-terminal.png"
+        alt="The Open OnDemand web terminal showing a command prompt on the Trillium login node"
+        loading="lazy"
+      />
+      <div class="screenshot-caption">Fig. 11 — Web terminal providing full shell access to Trillium</div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── DEBUGGING ── -->
+  <section class="section" id="debugging">
+    <div class="section-header">
+      <div class="section-icon">🔍</div>
+      <h2>Debugging Errors</h2>
+    </div>
+
+    <p>If an interactive application fails to start or crashes, check the session logs:</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Go to My Interactive Sessions</strong>
+          <p>Find the session that failed (it will show an error status).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Click the <code>output.log</code> link</strong>
+          <p>This opens the session's standard output and error log directly in the browser.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>Note your Session ID</strong>
+          <p>It's the long string like <code>8feb45fa-bc65-4846-8398-2a73c1bf8e5a</code> shown on the session card.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screenshot-block">
+      <div class="screenshot-header">
+        <div class="screenshot-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        Session Card — Error Log Link
+      </div>
+      <img
+        src="https://docs.alliancecan.ca/mediawiki/images/thumb/e/e7/Ood-session-id.png/600px-Ood-session-id.png"
+        alt="Interactive session card showing the output.log link and Session ID for error reporting"
+        loading="lazy"
+      />
+      <div class="screenshot-caption">Fig. 12 — Session card showing the output.log link and Session ID</div>
+    </div>
+
+    <div class="alert warn">
+      <span class="alert-icon">📋</span>
+      <div>
+        When submitting a <strong>support ticket to SciNet</strong>, include:
+        <ul style="margin-top:8px;margin-bottom:0;">
+          <li>The <code>output.log</code> file contents</li>
+          <li>Your <strong>Session ID</strong></li>
+          <li>Any other relevant context (modules loaded, job parameters, etc.)</li>
+        </ul>
+        Contact: <a href="mailto:support@scinet.utoronto.ca">support@scinet.utoronto.ca</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── VENV / PYTHON ── -->
+  <section class="section" id="venv">
+    <div class="section-header">
+      <div class="section-icon">🐍</div>
+      <h2>Porting Python Environments</h2>
+    </div>
+
+    <div class="alert warn">
+      <span class="alert-icon">⚠️</span>
+      <div>
+        <strong>Important:</strong> Due to the switch from CentOS 7 to <strong>Rocky Linux 9</strong>
+        and the updated software stack, existing virtual environment Jupyter kernels
+        <strong>may not work right away</strong> in the OnDemand portal.
+      </div>
+    </div>
+
+    <p>To fix an existing Python virtual environment kernel:</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Open a terminal on Trillium</strong>
+          <p>Use <em>Clusters → Trillium Shell Access</em> or the <code>&gt;_</code> button on an active session.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Load required Trillium modules and activate your virtual environment</strong>
+          <pre><span class="prompt">$ </span>module load StdEnv/2023 python/3.11
+<span class="prompt">$ </span>source ~/my_venv/bin/activate</pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>Run <code>venv2jup</code></strong>
+          <pre><span class="prompt">$ </span>venv2jup</pre>
+          <p style="margin-top:4px;">This registers your environment as a Jupyter kernel compatible with the new OS.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ── COMPARISON TABLE ── -->
+  <section class="section" id="comparison">
+    <div class="section-header">
+      <div class="section-icon">⚖️</div>
+      <h2>Open OnDemand vs JupyterHub</h2>
+    </div>
+    <p>JupyterHub was decommissioned in 2025 and replaced by Open OnDemand. Here's a full comparison:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>JupyterHub <em style="font-weight:400;opacity:.75">(decommissioned)</em></th>
+            <th>Open OnDemand</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Authentication</td><td>Password</td><td class="td-new">Password + MFA</td></tr>
+          <tr><td>First installed</td><td>2017</td><td class="td-new">2025</td></tr>
+          <tr><td>Last update</td><td class="td-old">2021</td><td class="td-new">2025</td></tr>
+          <tr>
+            <td>Supports</td>
+            <td>Jupyter Notebook, JupyterLab (R, Python, Julia)</td>
+            <td class="td-new">Jupyter, JupyterLab, RStudio, VSCode, Desktop, SAS*, Stata*, ParaView, Forge DDT/MAP, MATLAB</td>
+          </tr>
+          <tr><td>Save &amp; continue later</td><td class="td-check">Yes</td><td class="td-new td-check">Yes ¹</td></tr>
+          <tr><td>Command terminal</td><td class="td-cross td-old">No</td><td class="td-new td-check">Yes</td></tr>
+          <tr><td>File management</td><td>Limited</td><td class="td-new">Full</td></tr>
+          <tr><td>Monitor jobs</td><td class="td-cross td-old">No</td><td class="td-new td-check">Yes</td></tr>
+          <tr><td>Submit batch jobs</td><td class="td-cross td-old">No</td><td class="td-new td-check">Yes</td></tr>
+          <tr><td>Core limit</td><td>8 cores ²</td><td class="td-new">20 cores (8 high-mem) ³</td></tr>
+          <tr><td>Memory limit</td><td>48 GB ²</td><td class="td-new">85 GB (500 GB high-mem) ³</td></tr>
+          <tr><td>Time limit</td><td>3 days ²</td><td class="td-new">3 days ³</td></tr>
+          <tr><td>Operating system</td><td class="td-old">CentOS 7</td><td class="td-new">Rocky Linux 9</td></tr>
+          <tr><td>Software stack</td><td>NiaEnv, CCEnv</td><td class="td-new">CCEnv</td></tr>
+          <tr><td>System alerts</td><td class="td-cross td-old">No</td><td class="td-new td-check">Yes</td></tr>
+          <tr><td>Quota alerts</td><td class="td-cross td-old">No</td><td class="td-new td-check">Yes</td></tr>
+          <tr><td>Error logs</td><td class="td-cross td-old">No</td><td class="td-new td-check">Yes</td></tr>
+          <tr>
+            <td>Hardware</td>
+            <td>1× CPU node, 40 Intel CascadeLake cores @ 2.5 GHz, 1 TB RAM</td>
+            <td class="td-new">
+              62× CPU nodes (40 CascadeLake @ 2.5 GHz, 180 GB RAM);<br/>
+              3× high-mem nodes (1 TB RAM);<br/>
+              4× GPU nodes (NVIDIA H100 80 GB × 1, 96-core AMD EPYC 9654, 810 GB RAM)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-legend">
+      <span><span class="legend-box" style="background:#e8f5e9;border:1px solid #c8e6c9;"></span> Improvement in Open OnDemand</span>
+      <span><span class="legend-box" style="background:#fce4ec;border:1px solid #f8bbd9;"></span> Limitation in JupyterHub</span>
+    </div>
+
+    <p style="font-size:.82rem;color:var(--text-muted);margin-top:16px;line-height:1.7;">
+      ¹ Within the requested resource limits.<br/>
+      ² Limits on JupyterHub were not strictly enforced — temporary overages were possible.<br/>
+      ³ Limits must be requested before starting an application.<br/>
+      * Requires a valid institutional license.
+    </p>
+  </section>
+
+</main>
+
+<!-- ════════════════════════════
+     FOOTER
+═════════════════════════════════ -->
+<footer>
+  <div class="footer-links">
+    <a href="https://ondemand.scinet.utoronto.ca" target="_blank" rel="noopener">Open OnDemand Portal</a>
+    <a href="https://openondemand.org" target="_blank" rel="noopener">openondemand.org</a>
+    <a href="https://docs.alliancecan.ca/wiki/Open_OnDemand" target="_blank" rel="noopener">Alliance OOD Docs</a>
+    <a href="https://my.scinet.utoronto.ca" target="_blank" rel="noopener">mySciNet Portal</a>
+    <a href="mailto:support@scinet.utoronto.ca">support@scinet.utoronto.ca</a>
+  </div>
+  <p>
+    Content sourced from the
+    <a href="https://docs.alliancecan.ca/wiki/Trillium_Open_OnDemand_Quickstart" target="_blank" rel="noopener">
+      Digital Research Alliance of Canada wiki
+    </a>.
+    Open OnDemand is an
+    <a href="https://github.com/OSC/ondemand" target="_blank" rel="noopener">open-source project</a>
+    supported by the NSF.
+  </p>
+</footer>
+
+<!-- ════════════════════════════
+     SCROLL-TO-TOP BUTTON
+═════════════════════════════════ -->
+<button class="jump-top" id="jumpTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">▲</button>
+
+<!-- ════════════════════════════
+     JAVASCRIPT
+═════════════════════════════════ -->
+<script>
+  /* ── Sidebar toggle (mobile) ── */
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+  }
+  // Close sidebar on nav-link click (mobile)
+  document.querySelectorAll('.nav-list a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      document.getElementById('sidebar').classList.remove('open');
+    });
+  });
+
+  /* ── Scroll-spy: highlight active nav item ── */
+  var sections = document.querySelectorAll('section[id], div[id]');
+  var navLinks = document.querySelectorAll('.nav-list a');
+
+  function getActiveSectionId() {
+    var scrollY = window.scrollY;
+    var offset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--topbar-h') || '64') + 30;
+    var active = null;
+    sections.forEach(function(section) {
+      if (section.offsetTop - offset <= scrollY) {
+        active = section.id;
+      }
+    });
+    return active;
+  }
+
+  function updateNav() {
+    var activeId = getActiveSectionId();
+    navLinks.forEach(function(link) {
+      var href = link.getAttribute('href').replace('#', '');
+      if (href === activeId) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
+
+  /* ── Show/hide jump-to-top ── */
+  var jumpTop = document.getElementById('jumpTop');
+  function onScroll() {
+    updateNav();
+    if (window.scrollY > 400) {
+      jumpTop.classList.add('visible');
+    } else {
+      jumpTop.classList.remove('visible');
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  updateNav();
+</script>
+</body>
+</html>
